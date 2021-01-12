@@ -48,3 +48,7 @@ publish/
 *.tmp
 
 *.txt
+
+Answers.docx
+
+~$nswers.docx
