@@ -1,9 +1,11 @@
 using System;
 
-namespace ASP.NET_Core_Web_APIs
+namespace ASP.NET_Core_Web_APIs.Models
 {
     public class WeatherForecast
     {
+        public int Id { get; set; }
+
         public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }
