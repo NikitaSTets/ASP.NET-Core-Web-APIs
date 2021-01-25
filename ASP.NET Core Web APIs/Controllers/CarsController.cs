@@ -28,6 +28,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
         [HttpGet("{id}")]
+        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 300)]
         public Car GetById(int id)
         {
             return new Car
@@ -35,6 +36,19 @@ namespace ASP.NET_Core_Web_APIs.Controllers
                 Id = id,
                 MakeName = "Chevrolet",
                 ModelName = "Camaro"
+            };
+        }
+
+        [HttpGet("makeNames")]
+        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 300)]
+        public IEnumerable<string> GetCarMakeNames()
+        {
+            return new List<string>
+            {
+                "Reno",
+                "Audi",
+                "BMW",
+                "Chevrolet"
             };
         }
 
