@@ -5,5 +5,9 @@
     <RootNamespace>ASP.NET_Core_Web_APIs</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoWrapper.Core" Version="4.3.2" />
+  </ItemGroup>
+
 
 </Project>

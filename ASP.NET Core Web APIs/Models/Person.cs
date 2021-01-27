@@ -1,6 +1,6 @@
 ﻿namespace ASP.NET_Core_Web_APIs.Models
 {
-    public class People
+    public class Person
     {
         public string Name { get; set; }
 
