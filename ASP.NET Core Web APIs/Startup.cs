@@ -1,4 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using ASP.NET_Core_Web_APIs.Models;
+using ASP.NET_Core_Web_APIs.Repositories;
+using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Validators;
 using AutoWrapper;
@@ -39,8 +42,8 @@ namespace ASP.NET_Core_Web_APIs
             });
 
             services.AddTransient<IMakeNameValidator, MakeNameValidator>();
+            services.AddTransient<IRepository<Car>, CarsRepository>();
             services.AddTransient<IModelNameValidator, ModelNameValidator>();
-            services.AddTransient<IValidatableObject, CarValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,15 +58,14 @@ namespace ASP.NET_Core_Web_APIs
 
             app.UseHttpsRedirection();
 
-            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
+            app.UseApiResponseAndExceptionWrapper<MapResponseObject>(new AutoWrapperOptions
             {
                 ShowStatusCode = true,
-                ShowIsErrorFlagForSuccessfulResponse = false,
-                UseApiProblemDetailsException = false,
                 ApiVersion = "v3",
                 ShowApiVersion = true,
+                ShowIsErrorFlagForSuccessfulResponse = false,
                 IgnoreWrapForOkRequests = true,
-                IgnoreNullValue = true
+                IgnoreNullValue = true,
             });
 
             app.UseRouting();

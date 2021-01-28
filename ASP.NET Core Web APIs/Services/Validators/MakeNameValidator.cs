@@ -9,11 +9,13 @@ namespace ASP.NET_Core_Web_APIs.Services.Validators
             "Chevrolet", "Audi", "Reno", "Volvo", "BMW", "Skoda"
         };
 
-        public bool Validate(string makeName)
+        public OperationResult<bool> Validate(string makeName)
         {
             var isValidMakeName = MakeNames.Contains(makeName);
 
-            return isValidMakeName;
+            return isValidMakeName 
+                ? OperationResult.CreateSuccessful(true)
+                : OperationResult<bool>.CreateUnsuccessful($"Unknown {makeName} makeName");
         }
     }
 }

@@ -4,35 +4,19 @@ namespace ASP.NET_Core_Web_APIs
 {
     public class MapResponseObject
     {
-        [AutoWrapperPropertyMap(Prop.ResponseException)]
-        public object Error { get; set; }
-    }
+        [AutoWrapperPropertyMap(Prop.StatusCode)]
+        public string Code { get; set; }
 
-    public class Error
-    {
+        [AutoWrapperPropertyMap(Prop.ResponseException_ExceptionMessage)]
         public string Message { get; set; }
 
-        public string Code { get; set; }
-        public InnerError InnerError { get; set; }
+        [AutoWrapperPropertyMap(Prop.Result)] 
+        public object Data { get; set; }
 
-        public Error(string message, string code, InnerError inner)
-        {
-            Message = message;
-            Code = code;
-            InnerError = inner;
-        }
+        [AutoWrapperPropertyMap(Prop.ResponseException)]
+        public object Error { get; set; }
 
-    }
-
-    public class InnerError
-    {
-        public string RequestId { get; set; }
-        public string Date { get; set; }
-
-        public InnerError(string reqId, string reqDate)
-        {
-            RequestId = reqId;
-            Date = reqDate;
-        }
+        [AutoWrapperPropertyMap(Prop.ResponseException_Details)]
+        public string StackTrace { get; set; }
     }
 }

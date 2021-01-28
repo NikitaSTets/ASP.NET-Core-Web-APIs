@@ -2,6 +2,6 @@
 {
     public interface IModelNameValidator
     {
-        public bool Validate(string modelName);
+        public OperationResult<bool> Validate(string modelName);
     }
 }

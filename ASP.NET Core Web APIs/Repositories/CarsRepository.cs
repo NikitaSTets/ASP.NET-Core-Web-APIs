@@ -1,4 +1,9 @@
-﻿using ASP.NET_Core_Web_APIs.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
 
 namespace ASP.NET_Core_Web_APIs.Repositories
@@ -23,6 +28,24 @@ namespace ASP.NET_Core_Web_APIs.Repositories
         public void Update(Car entity)
         {
             return;
+        }
+
+        public Car GetFirst(Expression<Func<Car, bool>> predicate)
+        {
+            var random = new Random();
+            var value = random.Next(1, 10);
+
+            if (value > 3)
+            {
+                return null;
+            }
+
+            return new Car
+           {
+               Id = 10,
+               MakeName = "Audi",
+               ModelName = "A4"
+           };
         }
     }
 }

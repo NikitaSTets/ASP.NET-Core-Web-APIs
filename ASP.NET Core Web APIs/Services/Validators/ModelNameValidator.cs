@@ -9,11 +9,13 @@ namespace ASP.NET_Core_Web_APIs.Services.Validators
             "Comaro", "A6", "A4", "80", "i3", "Rapid"
         };
 
-        public bool Validate(string modelName)
+        public OperationResult<bool> Validate(string modelName)
         {
             var isValidModelName = ModelNames.Contains(modelName);
 
-            return isValidModelName;
+            return isValidModelName
+                ? true
+                : OperationResult<bool>.CreateUnsuccessful($"Unknown {modelName} modelName");
         }
     }
 }

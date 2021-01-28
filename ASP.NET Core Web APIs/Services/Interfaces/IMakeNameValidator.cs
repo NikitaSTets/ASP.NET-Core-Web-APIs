@@ -2,6 +2,6 @@
 {
     public interface IMakeNameValidator
     {
-        public bool Validate(string makeName);
+        public OperationResult<bool> Validate(string makeName);
     }
 }
