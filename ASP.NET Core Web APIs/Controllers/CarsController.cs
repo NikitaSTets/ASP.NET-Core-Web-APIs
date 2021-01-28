@@ -27,7 +27,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
 
 
         [HttpGet]
-        public ActionResult<IEnumerable<Car>> CarsList()
+        public ActionResult<IEnumerable<Car>> Cars()
         {
             return new List<Car>
             {
@@ -98,7 +98,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
         [HttpDelete("{carId}")]
-        public ActionResult DeleteCar(int carId)
+        public ActionResult Delete(int carId)
         {
             var oldCar = _carsRepository.GetById(carId);
             if (oldCar == null)
