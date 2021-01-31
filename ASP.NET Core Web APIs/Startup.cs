@@ -58,14 +58,9 @@ namespace ASP.NET_Core_Web_APIs
 
             app.UseHttpsRedirection();
 
-            app.UseApiResponseAndExceptionWrapper<MapResponseObject>(new AutoWrapperOptions
+            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions()
             {
-                ShowStatusCode = true,
-                ApiVersion = "v3",
-                ShowApiVersion = true,
-                ShowIsErrorFlagForSuccessfulResponse = false,
-                IgnoreWrapForOkRequests = true,
-                IgnoreNullValue = true,
+                UseCustomSchema = true
             });
 
             app.UseRouting();

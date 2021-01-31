@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using ASP.NET_Core_Web_APIs.Errors;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Interfaces;
@@ -67,12 +69,14 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Car> Create([FromBody] Car car)
+        public ActionResult<Car> Create(Car car)
         {
             var existCar = _carsRepository.GetFirst(c => c.MakeName == car.MakeName && c.ModelName == car.ModelName);
             if (existCar != null)
             {
-                return Conflict(new ApiException("Cars already exist", (int)HttpStatusCode.Conflict, ((int)ErrorCodes.AlreadyExist).ToString()));
+                throw new ApiException(
+                    new Error("Car already exist", ErrorCodes.AlreadyExist, null, new InnerError(HttpContext.TraceIdentifier, DateTime.Now.ToShortDateString())),
+                    (int)HttpStatusCode.Conflict);
             }
             car.Id = 15;
 
@@ -84,8 +88,9 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         {
             if (carId != newCar.Id)
             {
-                return BadRequest(new ApiException("Id in url and body are different", (int)HttpStatusCode.BadRequest, ((int)ErrorCodes.IdInUrlAndBodyAreDifferent).ToString()));
+                throw new ApiException(new Error("Id in url and body are different", ErrorCodes.IdInUrlAndBodyAreDifferent, nameof(carId)));
             }
+
             var oldCar = _carsRepository.GetById(carId);
             if (oldCar == null)
             {

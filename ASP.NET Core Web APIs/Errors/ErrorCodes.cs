@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_Core_Web_APIs
+﻿namespace ASP.NET_Core_Web_APIs.Errors
 {
     public enum ErrorCodes
     {
