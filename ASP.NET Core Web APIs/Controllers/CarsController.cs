@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Interfaces;
+using AutoWrapper.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NET_Core_Web_APIs.Controllers
@@ -16,7 +18,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
 
 
         public CarsController(
-            IModelNameValidator modelNameValidator, 
+            IModelNameValidator modelNameValidator,
             IMakeNameValidator makeNameValidator,
             IRepository<Car> carsRepository)
         {
@@ -64,58 +66,13 @@ namespace ASP.NET_Core_Web_APIs.Controllers
             };
         }
 
-        [HttpGet("makeNames")]
-        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 300)]
-        public IEnumerable<string> GetCarMakeNames()
-        {
-            return new List<string>
-            {
-                "Reno",
-                "Audi",
-                "BMW",
-                "Chevrolet"
-            };
-        }
-
-        [HttpGet("{carId}/{action}")]
-        public ActionResult<List<Person>> Owners(int carId)
-        {
-            return new List<Person>
-            {
-                new Person
-                {
-                    Name = "name",
-                    SurName = "surName",
-                    CarId = carId
-                },
-                new Person
-                {
-                    Name = "newName",
-                    SurName = "surName",
-                    CarId = carId
-                }
-            };
-        }
-
-        [HttpDelete("{carId}")]
-        public ActionResult Delete(int carId)
-        {
-            var oldCar = _carsRepository.GetById(carId);
-            if (oldCar == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
         [HttpPost]
         public ActionResult<Car> Create([FromBody] Car car)
         {
             var existCar = _carsRepository.GetFirst(c => c.MakeName == car.MakeName && c.ModelName == car.ModelName);
             if (existCar != null)
             {
-                return Conflict("Car already exist");
+                return Conflict(new ApiException("Cars already exist", (int)HttpStatusCode.Conflict, ((int)ErrorCodes.AlreadyExist).ToString()));
             }
             car.Id = 15;
 
@@ -127,7 +84,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         {
             if (carId != newCar.Id)
             {
-                return BadRequest("Id in url and body are different");
+                return BadRequest(new ApiException("Id in url and body are different", (int)HttpStatusCode.BadRequest, ((int)ErrorCodes.IdInUrlAndBodyAreDifferent).ToString()));
             }
             var oldCar = _carsRepository.GetById(carId);
             if (oldCar == null)
@@ -154,6 +111,18 @@ namespace ASP.NET_Core_Web_APIs.Controllers
             _carsRepository.Update(newCar);
 
             return Ok();
+        }
+
+        [HttpDelete("{carId}")]
+        public ActionResult Delete(int carId)
+        {
+            var oldCar = _carsRepository.GetById(carId);
+            if (oldCar == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
