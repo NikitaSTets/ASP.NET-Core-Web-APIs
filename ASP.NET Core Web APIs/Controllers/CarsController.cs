@@ -90,7 +90,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
             {
                 var error = new Error("Id in url and body are different", ErrorCodes.IdInUrlAndBodyAreDifferent, nameof(carId));
 
-                throw new ApiException(error);
+                throw new ApiException(error, (int)HttpStatusCode.Conflict);
             }
 
             var oldCar = _carsRepository.GetById(carId);
