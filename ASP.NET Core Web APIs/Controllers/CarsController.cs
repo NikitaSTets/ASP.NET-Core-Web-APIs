@@ -74,9 +74,9 @@ namespace ASP.NET_Core_Web_APIs.Controllers
             var existCar = _carsRepository.GetFirst(c => c.MakeName == car.MakeName && c.ModelName == car.ModelName);
             if (existCar != null)
             {
-                throw new ApiException(
-                    new Error("Car already exist", ErrorCodes.AlreadyExist, null, new InnerError(HttpContext.TraceIdentifier, DateTime.Now.ToShortDateString())),
-                    (int)HttpStatusCode.Conflict);
+                var error = new Error("Car already exist", ErrorCodes.AlreadyExist);
+
+                throw new ApiException(error, (int)HttpStatusCode.Conflict);
             }
             car.Id = 15;
 
@@ -88,7 +88,9 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         {
             if (carId != newCar.Id)
             {
-                throw new ApiException(new Error("Id in url and body are different", ErrorCodes.IdInUrlAndBodyAreDifferent, nameof(carId)));
+                var error = new Error("Id in url and body are different", ErrorCodes.IdInUrlAndBodyAreDifferent, nameof(carId));
+
+                throw new ApiException(error);
             }
 
             var oldCar = _carsRepository.GetById(carId);

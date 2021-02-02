@@ -58,7 +58,7 @@ namespace ASP.NET_Core_Web_APIs
 
             app.UseHttpsRedirection();
 
-            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions()
+            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
             {
                 UseCustomSchema = true
             });
