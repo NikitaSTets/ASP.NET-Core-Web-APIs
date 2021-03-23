@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using ASP.NET_Core_Web_APIs.Errors;
 using ASP.NET_Core_Web_APIs.Models;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
-    [Route("api/{controller}")]
+    [Route("api/cars")]
     public class CarsController : ControllerBase
     {
         private readonly IModelNameValidator _modelNameValidator;
@@ -30,6 +29,10 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
 
+        /// <summary>
+        /// //Cars return LOLOLO
+        /// </summary>
+        /// <returns> asdsa</returns>
         [HttpGet]
         public ActionResult<IEnumerable<Car>> Cars()
         {

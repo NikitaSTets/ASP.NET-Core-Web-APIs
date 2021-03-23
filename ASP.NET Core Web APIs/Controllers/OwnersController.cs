@@ -8,7 +8,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
     [ApiController]
     public class OwnersController : ControllerBase
     {
-        [HttpGet("{action}")]
+        [HttpGet("owners")]
         public ActionResult<List<Person>> Owners(int carId)
         {
             return new List<Person>

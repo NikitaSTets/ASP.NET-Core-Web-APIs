@@ -1,4 +1,8 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
@@ -12,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace ASP.NET_Core_Web_APIs
 {
@@ -44,24 +49,26 @@ namespace ASP.NET_Core_Web_APIs
             services.AddTransient<IMakeNameValidator, MakeNameValidator>();
             services.AddTransient<IRepository<Car>, CarsRepository>();
             services.AddTransient<IModelNameValidator, ModelNameValidator>();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Swagger Demo API",
+                    Description = "Demo API for Swagger",
+                    Version = "v1"
+                });
+                options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseResponseCaching();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
-            {
-                UseCustomSchema = true
-            });
 
             app.UseRouting();
 
@@ -70,6 +77,32 @@ namespace ASP.NET_Core_Web_APIs
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseHttpsRedirection();
+
+            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
+            {
+                UseCustomSchema = true
+            });
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            //app.UseSwagger(c =>
+            //{
+            //    c.RouteTemplate = "swagger/{documentname}/swagger.json";
+            //});
+
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Cool API V1");
+            //    c.RoutePrefix = "mycoolapi/swagger";
+            //});
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
         }
     }

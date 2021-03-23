@@ -7,6 +7,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
     [ApiController]
     public class MakeNamesController : ControllerBase
     {
+        [HttpGet]
         [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 300)]
         public IEnumerable<string> GetCarMakeNames()
         {
