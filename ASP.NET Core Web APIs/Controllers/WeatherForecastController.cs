@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
-    [ApiVersion(ApiVersions.V1)]
-    [ApiExplorerSettings(GroupName = ApiVersions.V1GroupName)]
+    [ApiVersion(Api.Versions.V1)]
+    [ApiExplorerSettings(GroupName = Api.Groups.WeatherGroupName)]
     [Route("api/v{version:apiVersion}/[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {

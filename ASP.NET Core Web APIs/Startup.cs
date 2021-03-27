@@ -75,18 +75,16 @@ namespace ASP.NET_Core_Web_APIs
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc(ApiVersions.V1GroupName, new OpenApiInfo
+                options.SwaggerDoc(Api.Groups.CarsGroupName, new OpenApiInfo
                 {
-                    Title = "Swagger Demo API",
-                    Description = "Demo API for Swagger",
-                    Version = ApiVersions.V1GroupName
+                    Title = $"Swagger {Api.Groups.CarsGroupName} API",
+                    Description = $"Demo {Api.Groups.CarsGroupName} API for Swagger",
                 });
 
-                options.SwaggerDoc(ApiVersions.V2GroupName, new OpenApiInfo
+                options.SwaggerDoc(Api.Groups.WeatherGroupName, new OpenApiInfo
                 {
-                    Title = "Swagger Demo API 2",
-                    Description = "Demo API for Swagger 2",
-                    Version = ApiVersions.V2GroupName
+                    Title = $"Swagger {Api.Groups.WeatherGroupName} API",
+                    Description = $"Demo {Api.Groups.WeatherGroupName} API for Swagger",
                 });
             });
         }
@@ -108,10 +106,17 @@ namespace ASP.NET_Core_Web_APIs
             {
                 endpoints.MapGet("/echo",
                     context => context.Response.WriteAsync("echo"))
-                    .RequireCors(MyAllowSpecificOrigins);
+                    .RequireCors(builder =>
+                        builder.WithOrigins("https://localhost:44378", "https://localhost:44312"));
 
-                endpoints.MapControllers()
-                    .RequireCors(MyAllowSpecificOrigins);
+                endpoints.MapControllers();
+
+
+                endpoints.MapControllerRoute(
+                        name: "api",
+                        pattern: "api/v{version:apiVersion}/cars")
+                    .RequireCors(builder =>
+                        builder.WithOrigins("http://example.com", "http://www.contoso.com"));
 
                 endpoints.MapGet("/echo2",
                     context => context.Response.WriteAsync("echo2"));
@@ -140,8 +145,8 @@ namespace ASP.NET_Core_Web_APIs
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
+                c.SwaggerEndpoint($"/swagger/{Api.Groups.CarsGroupName}/swagger.json", Api.Groups.CarsGroupName);
+                c.SwaggerEndpoint($"/swagger/{Api.Groups.WeatherGroupName}/swagger.json", Api.Groups.WeatherGroupName);
             });
         }
     }
