@@ -23,16 +23,29 @@ namespace ASP.NET_Core_Web_APIs
 {
     public class Startup
     {
+        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+
+        public IConfiguration Configuration { get; }
+
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44321").WithMethods("GET");
+                    });
+            });
+
             services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                 {
@@ -66,12 +79,9 @@ namespace ASP.NET_Core_Web_APIs
                     Description = "Demo API for Swagger 2",
                     Version = ApiVersions.V2
                 });
-
-                options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -81,11 +91,21 @@ namespace ASP.NET_Core_Web_APIs
 
             app.UseRouting();
 
+            app.UseCors();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapGet("/echo",
+                    context => context.Response.WriteAsync("echo"))
+                    .RequireCors(MyAllowSpecificOrigins);
+
+                endpoints.MapControllers()
+                         .RequireCors(MyAllowSpecificOrigins);
+
+                endpoints.MapGet("/echo2",
+                    context => context.Response.WriteAsync("echo2"));
             });
 
             app.UseHttpsRedirection();
