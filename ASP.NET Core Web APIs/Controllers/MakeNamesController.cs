@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
-    [ApiExplorerSettings(GroupName = ApiVersions.V2)]
-    [Route("api/cars/[controller]")]
+    [ApiVersion(ApiVersions.V2)]
+    [ApiExplorerSettings(GroupName = ApiVersions.V2GroupName)]
+    [Route("api/v{version:apiVersion}/cars/[controller]")]
     public class MakeNamesController : ControllerBase
     {
         [HttpGet]

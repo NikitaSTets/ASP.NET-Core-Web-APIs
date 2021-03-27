@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
-    [Route("api/cars/{carId}")]
-    [ApiExplorerSettings(GroupName = ApiVersions.V2)]
+    [ApiVersion(ApiVersions.V2)]
+    [Route("api/v{version:apiVersion}/cars/{carId}")]
+    [ApiExplorerSettings(GroupName = ApiVersions.V2GroupName)]
     public class OwnersController : ControllerBase
     {
         [HttpGet("owners")]

@@ -13,7 +13,9 @@ using AutoWrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -55,6 +57,13 @@ namespace ASP.NET_Core_Web_APIs
                 })
                 .AddXmlSerializerFormatters();
 
+            services.AddApiVersioning(option =>
+            {
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.ApiVersionReader = new QueryStringApiVersionReader();
+            });
+
             services.AddResponseCaching(options =>
             {
                 options.MaximumBodySize = 1024;
@@ -66,18 +75,18 @@ namespace ASP.NET_Core_Web_APIs
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc(ApiVersions.V1, new OpenApiInfo
+                options.SwaggerDoc(ApiVersions.V1GroupName, new OpenApiInfo
                 {
                     Title = "Swagger Demo API",
                     Description = "Demo API for Swagger",
-                    Version = ApiVersions.V1
+                    Version = ApiVersions.V1GroupName
                 });
 
-                options.SwaggerDoc(ApiVersions.V2, new OpenApiInfo
+                options.SwaggerDoc(ApiVersions.V2GroupName, new OpenApiInfo
                 {
                     Title = "Swagger Demo API 2",
                     Description = "Demo API for Swagger 2",
-                    Version = ApiVersions.V2
+                    Version = ApiVersions.V2GroupName
                 });
             });
         }
@@ -102,7 +111,7 @@ namespace ASP.NET_Core_Web_APIs
                     .RequireCors(MyAllowSpecificOrigins);
 
                 endpoints.MapControllers()
-                         .RequireCors(MyAllowSpecificOrigins);
+                    .RequireCors(MyAllowSpecificOrigins);
 
                 endpoints.MapGet("/echo2",
                     context => context.Response.WriteAsync("echo2"));

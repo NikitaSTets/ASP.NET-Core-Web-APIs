@@ -11,8 +11,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
-    [ApiExplorerSettings(GroupName = ApiVersions.V1)]
-    [Route("api/[controller]/[action]")]
+    [ApiVersion(ApiVersions.V1)]
+    [ApiExplorerSettings(GroupName = ApiVersions.V1GroupName)]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = {

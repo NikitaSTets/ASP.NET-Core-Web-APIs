@@ -11,8 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
-    [Route("api/cars")]
-    [ApiExplorerSettings(GroupName = ApiVersions.V1)]
+    [ApiVersion(ApiVersions.V1)]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiExplorerSettings(GroupName = ApiVersions.V1GroupName)]
     public class CarsController : ControllerBase
     {
         private readonly IModelNameValidator _modelNameValidator;
