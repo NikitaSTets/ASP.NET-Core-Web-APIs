@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using ASP.NET_Core_Web_APIs.Constants;
 using ASP.NET_Core_Web_APIs.Errors;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
@@ -11,6 +12,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
     [Route("api/cars")]
+    [ApiExplorerSettings(GroupName = ApiVersions.V1)]
     public class CarsController : ControllerBase
     {
         private readonly IModelNameValidator _modelNameValidator;

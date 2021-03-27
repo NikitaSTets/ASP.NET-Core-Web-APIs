@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using ASP.NET_Core_Web_APIs.Constants;
 using ASP.NET_Core_Web_APIs.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(GroupName = ApiVersions.V1)]
     [Route("api/[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {

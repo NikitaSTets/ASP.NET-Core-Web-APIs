@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using ASP.NET_Core_Web_APIs.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
-    [Route("api/cars/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = ApiVersions.V2)]
+    [Route("api/cars/[controller]")]
     public class MakeNamesController : ControllerBase
     {
         [HttpGet]

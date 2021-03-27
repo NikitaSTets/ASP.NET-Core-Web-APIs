@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ASP.NET_Core_Web_APIs.Constants;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
@@ -52,12 +53,20 @@ namespace ASP.NET_Core_Web_APIs
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo
+                options.SwaggerDoc(ApiVersions.V1, new OpenApiInfo
                 {
                     Title = "Swagger Demo API",
                     Description = "Demo API for Swagger",
-                    Version = "v1"
+                    Version = ApiVersions.V1
                 });
+
+                options.SwaggerDoc(ApiVersions.V2, new OpenApiInfo
+                {
+                    Title = "Swagger Demo API 2",
+                    Description = "Demo API for Swagger 2",
+                    Version = ApiVersions.V2
+                });
+
                 options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
             });
         }
@@ -103,6 +112,7 @@ namespace ASP.NET_Core_Web_APIs
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
             });
         }
     }

@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using ASP.NET_Core_Web_APIs.Constants;
 using ASP.NET_Core_Web_APIs.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
-    [Route("api/cars/{carId}")]
     [ApiController]
+    [Route("api/cars/{carId}")]
+    [ApiExplorerSettings(GroupName = ApiVersions.V2)]
     public class OwnersController : ControllerBase
     {
         [HttpGet("owners")]
