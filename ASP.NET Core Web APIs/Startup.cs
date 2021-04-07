@@ -60,8 +60,13 @@ namespace ASP.NET_Core_Web_APIs
             services.AddApiVersioning(option =>
             {
                 option.DefaultApiVersion = new ApiVersion(1, 0);
-                option.AssumeDefaultVersionWhenUnspecified = true;
-                option.ApiVersionReader = new QueryStringApiVersionReader();
+                option.AssumeDefaultVersionWhenUnspecified = true; 
+                option.ReportApiVersions = true;
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.SubstituteApiVersionInUrl = true;
             });
 
             services.AddResponseCaching(options =>
