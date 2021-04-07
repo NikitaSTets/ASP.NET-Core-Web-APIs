@@ -12,7 +12,6 @@ namespace ASP.NET_Core_Web_APIs.Controllers
 {
     [ApiController]
     [ApiVersion(Api.Versions.V1)]
-    [ApiExplorerSettings(GroupName = Api.Groups.WeatherGroupName)]
     [Route("api/v{version:apiVersion}/[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {

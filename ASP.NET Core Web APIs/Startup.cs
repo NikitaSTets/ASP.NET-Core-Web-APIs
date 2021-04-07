@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
@@ -60,7 +61,7 @@ namespace ASP.NET_Core_Web_APIs
             services.AddApiVersioning(option =>
             {
                 option.DefaultApiVersion = new ApiVersion(1, 0);
-                option.AssumeDefaultVersionWhenUnspecified = true; 
+                option.AssumeDefaultVersionWhenUnspecified = true;
                 option.ReportApiVersions = true;
             });
 
@@ -78,23 +79,23 @@ namespace ASP.NET_Core_Web_APIs
             services.AddTransient<IRepository<Car>, CarsRepository>();
             services.AddTransient<IModelNameValidator, ModelNameValidator>();
 
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc(Api.Groups.CarsGroupName, new OpenApiInfo
+            services.AddSwaggerGen(
+                options =>
                 {
-                    Title = $"Swagger {Api.Groups.CarsGroupName} API",
-                    Description = $"Demo {Api.Groups.CarsGroupName} API for Swagger",
-                });
+                    var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
 
-                options.SwaggerDoc(Api.Groups.WeatherGroupName, new OpenApiInfo
-                {
-                    Title = $"Swagger {Api.Groups.WeatherGroupName} API",
-                    Description = $"Demo {Api.Groups.WeatherGroupName} API for Swagger",
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerDoc(description.GroupName, new OpenApiInfo
+                        {
+                            Title = $"{description.ApiVersion}",
+                            Version = description.ApiVersion.ToString()
+                        });
+                    }
                 });
-            });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -116,12 +117,11 @@ namespace ASP.NET_Core_Web_APIs
 
                 endpoints.MapControllers();
 
-
-                endpoints.MapControllerRoute(
-                        name: "api",
-                        pattern: "api/v{version:apiVersion}/cars")
-                    .RequireCors(builder =>
-                        builder.WithOrigins("http://example.com", "http://www.contoso.com"));
+                //endpoints.MapControllerRoute(
+                //        name: "api",
+                //        pattern: "api/v{version:apiVersion}/cars")
+                //    .RequireCors(builder =>
+                //        builder.WithOrigins("http://example.com", "http://www.contoso.com"));
 
                 endpoints.MapGet("/echo2",
                     context => context.Response.WriteAsync("echo2"));
@@ -147,12 +147,14 @@ namespace ASP.NET_Core_Web_APIs
             //});
 
             app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint($"/swagger/{Api.Groups.CarsGroupName}/swagger.json", Api.Groups.CarsGroupName);
-                c.SwaggerEndpoint($"/swagger/{Api.Groups.WeatherGroupName}/swagger.json", Api.Groups.WeatherGroupName);
-            });
+            app.UseSwaggerUI(
+                options =>
+                {
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                    }
+                });
         }
     }
 }

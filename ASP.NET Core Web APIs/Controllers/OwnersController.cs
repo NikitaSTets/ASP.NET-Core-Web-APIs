@@ -9,7 +9,6 @@ namespace ASP.NET_Core_Web_APIs.Controllers
     [ApiVersion(Api.Versions.V1)]
     [ApiVersion(Api.Versions.V2)]
     [Route("api/v{version:apiVersion}/cars/{carId}")]
-    [ApiExplorerSettings(GroupName = Api.Groups.CarsGroupName)]
     public class OwnersController : ControllerBase
     {
         [HttpGet]

@@ -7,7 +7,6 @@ namespace ASP.NET_Core_Web_APIs.Controllers
     [ApiController]
     [ApiVersion(Api.Versions.V1)]
     [ApiVersion(Api.Versions.V2)]
-    [ApiExplorerSettings(GroupName = Api.Groups.CarsGroupName)]
     [Route("api/v{version:apiVersion}/cars/[controller]")]
     public class MakeNamesController : ControllerBase
     {
