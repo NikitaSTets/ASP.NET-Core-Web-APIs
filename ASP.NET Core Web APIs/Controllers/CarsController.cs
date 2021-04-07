@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Mime;
 using ASP.NET_Core_Web_APIs.Constants;
 using ASP.NET_Core_Web_APIs.Errors;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Interfaces;
 using AutoWrapper.Wrappers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ASP.NET_Core_Web_APIs.Controllers
 {
@@ -37,6 +41,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         /// </summary>
         /// <returns> asdsa</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Car>))]
         public ActionResult<IEnumerable<Car>> Cars()
         {
             return new List<Car>
@@ -57,6 +62,8 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Car))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 300)]
         public ActionResult<Car> GetById(int id)
         {
@@ -75,6 +82,9 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
         [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Car))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
         public ActionResult<Car> Create(Car car)
         {
             var existCar = _carsRepository.GetFirst(c => c.MakeName == car.MakeName && c.ModelName == car.ModelName);
@@ -90,6 +100,11 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
         [HttpPut("{carId}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDictionary))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
         public ActionResult Update(int carId, Car newCar)
         {
             if (carId != newCar.Id)
@@ -127,6 +142,8 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         }
 
         [HttpDelete("{carId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult Delete(int carId)
         {
             var oldCar = _carsRepository.GetById(carId);
