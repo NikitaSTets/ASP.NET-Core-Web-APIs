@@ -8,6 +8,7 @@ using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Interfaces;
 using AutoWrapper.Wrappers;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -33,13 +34,10 @@ namespace ASP.NET_Core_Web_APIs.Controllers
             _makeNameValidator = makeNameValidator;
             _carsRepository = carsRepository;
         }
+        
 
-
-        /// <summary>
-        /// //Cars return LOLOLO
-        /// </summary>
-        /// <returns> asdsa</returns>
         [HttpGet]
+        [EnableCors(PolicyName = PolicyConstants.MyAllowSpecificOrigins)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Car>))]
         public ActionResult<IEnumerable<Car>> Cars()
         {

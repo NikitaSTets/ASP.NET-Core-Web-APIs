@@ -26,9 +26,6 @@ namespace ASP.NET_Core_Web_APIs
 {
     public class Startup
     {
-        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-
         public IConfiguration Configuration { get; }
 
 
@@ -42,10 +39,12 @@ namespace ASP.NET_Core_Web_APIs
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
+                options.AddDefaultPolicy(builder => builder.AllowAnyOrigin());
+                options.AddPolicy(name: PolicyConstants.MyAllowSpecificOrigins,
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44321").WithMethods("GET");
+                        builder.WithOrigins("https://localhost:44312")
+                            .WithMethods("GET");
                     });
             });
 
