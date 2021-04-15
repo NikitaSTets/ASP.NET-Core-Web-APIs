@@ -98,6 +98,11 @@ namespace ASP.NET_Core_Web_APIs
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
+            {
+                UseCustomSchema = true
+            });
+
             app.UseRouting();
 
             app.UseCors();
@@ -124,11 +129,6 @@ namespace ASP.NET_Core_Web_APIs
             });
 
             app.UseHttpsRedirection();
-
-            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
-            {
-                UseCustomSchema = true
-            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             //app.UseSwagger(c =>

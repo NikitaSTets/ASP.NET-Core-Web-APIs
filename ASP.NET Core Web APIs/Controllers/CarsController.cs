@@ -7,6 +7,8 @@ using ASP.NET_Core_Web_APIs.Errors;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Interfaces;
+using AutoWrapper.Extensions;
+using AutoWrapper.Models;
 using AutoWrapper.Wrappers;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +36,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
             _makeNameValidator = makeNameValidator;
             _carsRepository = carsRepository;
         }
-        
+
 
         [HttpGet]
         [EnableCors(PolicyName = PolicyConstants.MyAllowSpecificOrigins)]
@@ -99,7 +101,7 @@ namespace ASP.NET_Core_Web_APIs.Controllers
         [HttpPut("{carId}")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDictionary))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiProblemDetailsValidationErrorResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
         public ActionResult Update(int carId, Car newCar)
@@ -130,7 +132,9 @@ namespace ASP.NET_Core_Web_APIs.Controllers
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.AllErrors();
+
+                throw new ApiException(errors, (int)HttpStatusCode.BadRequest);
             }
 
             _carsRepository.Update(newCar);
