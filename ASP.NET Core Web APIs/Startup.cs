@@ -1,12 +1,9 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+using System.Text.Json.Serialization;
 using ASP.NET_Core_Web_APIs.Constants;
 using ASP.NET_Core_Web_APIs.Models;
 using ASP.NET_Core_Web_APIs.Repositories;
 using ASP.NET_Core_Web_APIs.Repositories.Interfaces;
+using ASP.NET_Core_Web_APIs.SchemaFilters;
 using ASP.NET_Core_Web_APIs.Services.Interfaces;
 using ASP.NET_Core_Web_APIs.Services.Validators;
 using AutoWrapper;
@@ -15,8 +12,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -39,7 +34,7 @@ namespace ASP.NET_Core_Web_APIs
         {
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder => builder.AllowAnyOrigin());
+                //options.AddDefaultPolicy(builder => builder.AllowAnyOrigin());
                 options.AddPolicy(name: PolicyConstants.MyAllowSpecificOrigins,
                     builder =>
                     {
@@ -54,7 +49,8 @@ namespace ASP.NET_Core_Web_APIs
                     //options.SuppressInferBindingSourcesForParameters = true;
                     //options.SuppressMapClientErrors = true;
                     options.ClientErrorMapping[StatusCodes.Status400BadRequest].Link = "https://httpstatuses.com/400";
-                })
+                }).AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
                 .AddXmlSerializerFormatters();
 
             services.AddApiVersioning(option =>
@@ -82,6 +78,7 @@ namespace ASP.NET_Core_Web_APIs
                 options =>
                 {
                     var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+                    options.SchemaFilter<EnumSchemaFilter>();
 
                     foreach (var description in provider.ApiVersionDescriptions)
                     {
